@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel
-from pygame import mixer # Load the required library
+from pygame import mixer  # Load the required library
 from PyQt5.QtWidgets import QLCDNumber, QLineEdit
+
 endsi = open('ends.txt', 'r')
 lines = endsi.readlines()
 import time
 import random
+
 konzovki = []
 for line in lines:
     konzovki.append(line)
@@ -23,6 +25,7 @@ pole = [[], [], [], [], [], [], [], [], [], [],
         [], [], [], [], [], [], [], [], [], []]
 
 pole2 = pole.copy()
+
 
 def randomShip(pole):
     ships = []
@@ -88,7 +91,8 @@ def randomShip(pole):
         answer = True
         for i in range(0, len(ship)):
             if len(ship) > 1:
-                if (ship[i] % 10 % 10 == 0 and ship[i] != 0 and i != 0 and site % 2 != 0) or ship[i] > 99 or ship[i] < 0:
+                if (ship[i] % 10 % 10 == 0 and ship[i] != 0 and i != 0 and site % 2 != 0) or ship[i] > 99 or ship[
+                    i] < 0:
                     answer = False
                     break
                 if ship[-1] // 10 != ship[0] // 10 and (site % 2 == 1):
@@ -116,6 +120,7 @@ def randomShip(pole):
             for g in range(0, len(ships[i])):
                 pole[ships[i][g]] = ['Y']
     print(ships)
+
 
 class Example(QWidget):
     def __init__(self):
@@ -371,6 +376,7 @@ class Example(QWidget):
                         if abs(a % 10 - ship2 % 10) < 2:
                             answer = False
         return answer
+
     num = 0
     randomShip(pole)
     randomShip(pole2)
