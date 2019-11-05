@@ -20,12 +20,13 @@ class Server:
                 valid = ans == b'I am the Qtsb client!\n'  # А это точно Qtsb? Вдруг это случайность?
             except timeout:
                 pass
+        self.send('I am the Qtsb server!\n')
         print(f'Опа, подключение: {self.conn_ip}')
         self.conn.settimeout(None)
         print(self.read())
 
     def send(self, data):
-        self.conn.sendall(str(data).encode())
+        self.conn.send(str(data).encode())
 
     def read(self):
         return self.conn.recv(1024).decode()
