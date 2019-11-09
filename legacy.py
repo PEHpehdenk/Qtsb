@@ -221,31 +221,31 @@ class Example(QWidget):
                     if self.sender().text() == '':
                         self.sender().setText('❌')
                         popal = True
-                        # mixer.init()
-                        # mixer.music.load('popal.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('popal.mp3')
+                        mixer.music.play()
                         self.suma1 += 1
                         if self.suma1 == 20:
                             dalshe = True
                             self.info.setText('Игрок #1 выиграл!')
                     else:
                         self.sumaError += 1
-                        # mixer.init()
-                        # mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
+                        mixer.music.play()
                         error = True
                 else:
                     if self.sender().text() == '':
                         self.sender().setText('•')
-                        # mixer.init()
-                        # mixer.music.load('04598.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('04598.mp3')
+                        mixer.music.play()
                         self.sumaFail += 1
                     else:
                         self.sumaError += 1
-                        # mixer.init()
-                        # mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
+                        mixer.music.play()
                         error = True
                 textik = 'вы ударили по: '
                 textik += cords
@@ -253,9 +253,9 @@ class Example(QWidget):
             else:
                 self.sumaError += 1
                 self.info.setText('сейчас не ваш ход')
-                # mixer.init()
-                # mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
-                # mixer.music.play()
+                mixer.init()
+                mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
+                mixer.music.play()
                 error = True
         if self.hodi % 2 == 1:
             if 'Player' in self.sender().objectName():
@@ -263,31 +263,31 @@ class Example(QWidget):
                     if self.sender().text() == '':
                         self.sender().setText('❌')
                         popal = True
-                        # mixer.init()
-                        # mixer.music.load('popal.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('popal.mp3')
+                        mixer.music.play()
                         self.suma2 += 1
                         if self.suma2 == 20:
                             dalshe = True
                             self.info.setText('Игрок #2 выиграл!')
                     else:
                         self.sumaError += 1
-                        # mixer.init()
-                        # mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
+                        mixer.music.play()
                         error = True
                 else:
                     if self.sender().text() == '':
                         self.sender().setText('•')
-                        # mixer.init()
-                        # mixer.music.load('04598.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('04598.mp3')
+                        mixer.music.play()
                         self.sumaFail += 1
                     else:
                         self.sumaError += 1
-                        # mixer.init()
-                        # mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
-                        # mixer.music.play()
+                        mixer.init()
+                        mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
+                        mixer.music.play()
                         error = True
                 textik = 'вы ударили по: '
                 textik += cords
@@ -295,9 +295,9 @@ class Example(QWidget):
             else:
                 self.sumaError += 1
                 self.info.setText('сейчас не ваш ход')
-                # mixer.init()
-                # mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
-                # mixer.music.play()
+                mixer.init()
+                mixer.music.load('wide-design-z_uk-oshibki-windows.mp3')
+                mixer.music.play()
                 error = True
         if not popal and not error:
             self.hodi += 1
