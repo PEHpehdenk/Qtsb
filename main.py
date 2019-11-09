@@ -15,12 +15,13 @@ field2 = [[[]] * 10] * 10
 
 # TODO: Убить Даниэля, кхм, не то...
 # TODO: Перенести сюда функцию legacy.randomShip (нормальную!)
-def genBattleField():
 
+
+def genBattleField():
+    pass
 
 
 # TODO: QtDesigner клевая вещь, давайте ее использовать (ну как бы все сразу видно, что как смотрится)
-
 
 class GameWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):

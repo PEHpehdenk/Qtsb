@@ -8,6 +8,8 @@ endsi = open('ends.txt', 'r')
 lines = endsi.readlines()
 import time
 import random
+import history
+import gamelog
 
 konzovki = []
 for line in lines:
@@ -25,6 +27,8 @@ pole = [[], [], [], [], [], [], [], [], [], [],
         [], [], [], [], [], [], [], [], [], []]
 
 pole2 = pole.copy()
+
+logger = gamelog.Logger(sys.stdout)
 
 
 def randomShip(pole):
@@ -132,13 +136,13 @@ class Example(QWidget):
     def initUI(self):
         self.retry = QPushButton(self)
         self.retry.setText('расставить корабли #1')
-        self.retry.move(700, 300)
+        self.retry.move(700, 100)
         self.retry.clicked.connect(self.rastanovka)
         self.retry.setObjectName('#1')
         self.retry2 = QPushButton(self)
         self.retry2.setText('расставить корабли #2')
         self.retry2.setObjectName('#2')
-        self.retry2.move(700, 700)
+        self.retry2.move(700, 500)
         self.retry2.clicked.connect(self.rastanovka)
         self.hodi = 0
         self.english = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -156,49 +160,59 @@ class Example(QWidget):
         self.secretButton.clicked.connect(self.secret)
         self.fullScreen = QPushButton('FULL HD', self)
         self.fullScreen.resize(100, 100)
-        self.fullScreen.move(1000, 500)
+        self.fullScreen.move(1000, 350)
         self.fullScreen.clicked.connect(self.HD)
         self.sumaFail = 0
+
         for i in range(1, 11):
             btn = QLabel(self)
             btn.setText(str(i))
-            btn.move(400 + (i - 1) * 20, 580)
+            btn.move(400 + (i - 1) * 20, 430)
         for i in range(0, 10):
             for g in range(0, 10):
                 btn = QPushButton("", self)
-                btn.move(400 + 20 * g, 600 + 20 * i)
+                btn.move(400 + 20 * g, 450 + 20 * i)
                 btn.resize(20, 20)
                 text = self.english[i] + str(g + 1)
                 btn.setObjectName(text)
                 btn.clicked.connect(self.game)
             btn = QLabel(self)
             btn.setText(self.english[i])
-            btn.move(380, 600 + 20 * i)
+            btn.move(380, 450 + 20 * i)
         for i in range(1, 11):
             btn = QLabel(self)
             btn.setText(str(i))
-            btn.move(400 + (i - 1) * 20, 180)
+            btn.move(400 + (i - 1) * 20, 25)
         for i in range(0, 10):
             for g in range(0, 10):
                 btn = QPushButton("", self)
-                btn.move(400 + 20 * g, 200 + 20 * i)
+                btn.move(400 + 20 * g, 50 + 20 * i)
                 btn.resize(20, 20)
                 text = self.english[i] + str(g + 1) + str('Player')
                 btn.setObjectName(text)
                 btn.clicked.connect(self.game)
             btn = QLabel(self)
             btn.setText(self.english[i])
-            btn.move(380, 200 + 20 * i)
+            btn.move(380, 50 + 20 * i)
         self.info = QLabel(self)
         self.info.setText('ваш ход                       ')
-        self.info.move(460, 900)
+        self.info.move(460, 750)
         self.hodi = 0
         self.comPole = QLabel(self)
         self.comPole.setText('корабли компьютера')
-        self.comPole.move(430, 550)
+        self.comPole.move(430, 400)
         self.youPole = QLabel(self)
         self.youPole.setText('ваши корабли')
-        self.youPole.move(450, 150)
+        self.youPole.move(450, 0)
+
+        self.btn_showHistory = QPushButton(self)
+        self.btn_showHistory.setText('История игр')
+        self.btn_showHistory.move(20, 20)
+        self.btn_showHistory.clicked.connect(self.showHistory)
+
+    def showHistory(self):
+        self.hisWin = history.HistoryWindow()
+        self.hisWin.show()
 
     def game(self):
         popal = False
@@ -304,22 +318,24 @@ class Example(QWidget):
         if dalshe:
             if self.sumaFail > 0:
                 if self.suma1 == 20:
-                    time.sleep(5)
-                    print("Error: Игра становится неинтересной, когда её выиграть, пытайтесь найти пасхалки")
+                    history.new_res(1)
+                    logger.log(logger.WARNING,
+                               "Игра становится неинтересной, когда её выиграть, пытайтесь найти пасхалки")
                     dalshe2 = True
                     for line in lines:
                         if 'Неизбежность для первого игрока' in lines:
                             dalshe2 = False
                     if dalshe2:
-                        print("ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Неизбежность для первого игрока")
+                        logger.log(logger.INFO, "ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Неизбежность для первого игрока")
                         endsi = open('ends.txt', 'w')
                         endsi.write("Неизбежность для первого игрока")
                         endsi.write('\n')
                         for i in range(0, len(konzovki)):
                             endsi.write(konzovki[i])
                 else:
-                    time.sleep(5)
-                    print("Error: Игра становится неинтересной, когда её выиграть, пытайтесь найти пасхалки")
+                    history.new_res(2)
+                    logger.log(logger.WARNING,
+                               "Игра становится неинтересной, когда её выиграть, пытайтесь найти пасхалки")
                     dalshe2 = True
                     for line in lines:
                         if 'Неизбежность для второго игрока' in lines:
@@ -332,14 +348,14 @@ class Example(QWidget):
                         for i in range(0, len(konzovki)):
                             endsi.write(konzovki[i])
             else:
-                time.sleep(5)
-                print("Error: Читерство всегда наказуемо")
+                history.new_res(0)
+                logger.log(logger.CRITICAL, "Читерство всегда наказуемо")
                 dalshe2 = True
                 for line in lines:
                     if 'Читер' in lines:
                         dalshe2 = False
                 if dalshe2:
-                    print("ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Читер")
+                    logger.log(logger.INFO, "ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Читер")
                     endsi = open('ends.txt', 'w')
                     endsi.write("Читер")
                     endsi.write('\n')
@@ -347,14 +363,14 @@ class Example(QWidget):
                         endsi.write(konzovki[i])
             quit()
         if self.sumaError == 30:
-            time.sleep(5)
-            print("Error: Вас предупреждали слишком много раз...")
+            history.new_res(0)
+            logger.log(logger.CRITICAL, "Вас предупреждали слишком много раз...")
             dalshe2 = True
             for line in lines:
                 if 'Бунтарь' in lines:
                     dalshe2 = False
             if dalshe2:
-                print("ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Бунтарь")
+                logger.log(logger.INFO, "ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Бунтарь")
                 endsi = open('ends.txt', 'w')
                 endsi.write("Бунтарь")
                 endsi.write('\n')
@@ -384,15 +400,15 @@ class Example(QWidget):
     def rastanovka(self):
         self.sumaRasstanovok += 1
         if self.sumaRasstanovok == 20:
+            history.new_res(0)
             dalshe2 = False
-            time.sleep(5)
-            print("Error: Впредь будьте более уверенным")
+            logger.log(logger.WARNING, "Впредь будьте более уверенным")
             dalshe2 = True
             for line in lines:
                 if 'Сомневающийся' in lines:
                     dalshe2 = False
             if dalshe2:
-                print("ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Сомневающийся")
+                logger.log(logger.INFO, "ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Сомневающийся")
                 endsi = open('ends.txt', 'w')
                 endsi.write("Сомневающийся")
                 endsi.write('\n')
@@ -405,15 +421,15 @@ class Example(QWidget):
             randomShip(pole2)
 
     def secret(self):
+        history.new_res(0)
         dalshe2 = False
-        time.sleep(5)
-        print("Error: Вы очень внимательны")
+        logger.log(logger.CRITICAL, "Вы очень внимательны")
         dalshe2 = True
         for line in lines:
             if 'Зоркий глаз' in lines:
                 dalshe2 = False
         if dalshe2:
-            print("ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Зоркий глаз")
+            logger.log(logger.INFO, "ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: Зоркий глаз")
             endsi = open('ends.txt', 'w')
             endsi.write("Зоркий глаз")
             endsi.write('\n')
@@ -422,15 +438,15 @@ class Example(QWidget):
         quit()
 
     def HD(self):
+        history.new_res(0)
         dalshe2 = False
-        time.sleep(5)
-        print("Error: Похоже, вы предпочитаете играть на весь экран...")
+        logger.log(logger.CRITICAL, "Похоже, вы предпочитаете играть на весь экран...")
         dalshe2 = True
         for line in lines:
             if 'FULL HD' in lines:
                 dalshe2 = False
         if dalshe2:
-            print("ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: FULL HD")
+            logger.log(logger.INFO, "ВЫ РАЗБЛОКИРОВАЛИ КОНЦОВКУ: FULL HD")
             endsi = open('ends.txt', 'w')
             endsi.write("FULL HD")
             endsi.write('\n')
@@ -440,7 +456,9 @@ class Example(QWidget):
 
 
 if __name__ == '__main__':
+    # history.init()
     app = QApplication(sys.argv)
     ex = Example()
     ex.show()
+    # history.shutdown()
     sys.exit(app.exec())
