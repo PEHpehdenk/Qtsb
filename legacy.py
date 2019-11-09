@@ -4,6 +4,7 @@ from pygame import mixer  # Load the required library
 from PyQt5.QtWidgets import QLCDNumber, QLineEdit
 import time
 import random
+import history
 
 endsi = open('ends.txt', 'r')
 lines = endsi.readlines()
@@ -125,17 +126,25 @@ class Example(QWidget):
 
     ships = []
 
+    def showHisWin(self):
+        self.hisWin = history.HistoryWindow()
+        self.hisWin.show()
+
     def initUI(self):
+        self.bnt_showHis = QPushButton(self)
+        self.bnt_showHis.move(50, 50)
+        self.bnt_showHis.setText('Показать историю')
+        self.bnt_showHis.clicked.connect(self.showHisWin)
         self.end = False
         self.retry = QPushButton(self)
         self.retry.setText('расставить корабли #1')
-        self.retry.move(700, 300)
+        self.retry.move(700, 150)
         self.retry.clicked.connect(self.rastanovka)
         self.retry.setObjectName('#1')
         self.retry2 = QPushButton(self)
         self.retry2.setText('расставить корабли #2')
         self.retry2.setObjectName('#2')
-        self.retry2.move(700, 700)
+        self.retry2.move(700, 550)
         self.retry2.clicked.connect(self.rastanovka)
         self.hodi = 0
         self.english = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -153,49 +162,49 @@ class Example(QWidget):
         self.secretButton.clicked.connect(self.secret)
         self.fullScreen = QPushButton('FULL HD', self)
         self.fullScreen.resize(100, 100)
-        self.fullScreen.move(1000, 500)
+        self.fullScreen.move(1000, 350)
         self.fullScreen.clicked.connect(self.HD)
         self.sumaFail = 0
         for i in range(1, 11):
             btn = QLabel(self)
             btn.setText(str(i))
-            btn.move(400 + (i - 1) * 20, 580)
+            btn.move(400 + (i - 1) * 20, 430)
         for i in range(0, 10):
             for g in range(0, 10):
                 btn = QPushButton("", self)
-                btn.move(400 + 20 * g, 600 + 20 * i)
+                btn.move(400 + 20 * g, 450 + 20 * i)
                 btn.resize(20, 20)
                 text = self.english[i] + str(g + 1)
                 btn.setObjectName(text)
                 btn.clicked.connect(self.game)
             btn = QLabel(self)
             btn.setText(self.english[i])
-            btn.move(380, 600 + 20 * i)
+            btn.move(380, 450 + 20 * i)
         for i in range(1, 11):
             btn = QLabel(self)
             btn.setText(str(i))
-            btn.move(400 + (i - 1) * 20, 180)
+            btn.move(400 + (i - 1) * 20, 30)
         for i in range(0, 10):
             for g in range(0, 10):
                 btn = QPushButton("", self)
-                btn.move(400 + 20 * g, 200 + 20 * i)
+                btn.move(400 + 20 * g, 50 + 20 * i)
                 btn.resize(20, 20)
                 text = self.english[i] + str(g + 1) + str('Player')
                 btn.setObjectName(text)
                 btn.clicked.connect(self.game)
             btn = QLabel(self)
             btn.setText(self.english[i])
-            btn.move(380, 200 + 20 * i)
+            btn.move(380, 50 + 20 * i)
         self.info = QLabel(self)
         self.info.setText('ваш ход                                                                                   ')
-        self.info.move(460, 900)
+        self.info.move(460, 300)
         self.hodi = 0
         self.comPole = QLabel(self)
         self.comPole.setText('корабли компьютера')
-        self.comPole.move(430, 550)
+        self.comPole.move(430, 400)
         self.youPole = QLabel(self)
         self.youPole.setText('ваши корабли')
-        self.youPole.move(450, 150)
+        self.youPole.move(450, 0)
 
     def game(self):
         if not self.end:
@@ -302,7 +311,7 @@ class Example(QWidget):
             if dalshe:
                 if self.sumaFail > 0:
                     if self.suma1 == 20:
-                        time.sleep(5)
+                        history.new_res(1)
                         print("Error: Игра становится неинтересной, когда её выиграть, пытайтесь найти пасхалки")
                         dalshe2 = True
                         for line in lines:
@@ -318,7 +327,7 @@ class Example(QWidget):
                                 endsi.write(konzovki[i])
                         self.end = True
                     else:
-                        time.sleep(5)
+                        history.new_res(2)
                         print("Error: Игра становится неинтересной, когда её выиграть, пытайтесь найти пасхалки")
                         dalshe2 = True
                         for line in lines:
@@ -334,7 +343,7 @@ class Example(QWidget):
                                 endsi.write(konzovki[i])
                         self.end = True
                 else:
-                    time.sleep(5)
+                    history.new_res(0)
                     print("Error: Читерство всегда наказуемо")
                     dalshe2 = True
                     for line in lines:
@@ -350,7 +359,7 @@ class Example(QWidget):
                             endsi.write(konzovki[i])
                     self.end = True
             if self.sumaError == 30:
-                time.sleep(5)
+                history.new_res(0)
                 print("Error: Вас предупреждали слишком много раз...")
                 dalshe2 = True
                 for line in lines:
@@ -379,7 +388,7 @@ class Example(QWidget):
             self.sumaRasstanovok += 1
             if self.sumaRasstanovok == 20:
                 dalshe2 = False
-                time.sleep(5)
+                history.new_res(0)
                 print("Error: Впредь будьте более уверенным")
                 dalshe2 = True
                 for line in lines:
@@ -406,7 +415,7 @@ class Example(QWidget):
     def secret(self):
         if not self.end:
             dalshe2 = False
-            time.sleep(5)
+            history.new_res(0)
             print("Error: Вы очень внимательны")
             dalshe2 = True
             for line in lines:
@@ -429,7 +438,7 @@ class Example(QWidget):
     def HD(self):
         if not self.end:
             dalshe2 = False
-            time.sleep(5)
+            history.new_res(0)
             print("Error: Похоже, вы предпочитаете играть на весь экран...")
             dalshe2 = True
             for line in lines:
