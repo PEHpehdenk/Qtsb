@@ -148,8 +148,6 @@ class Example(QWidget):
         self.retry2.clicked.connect(self.rastanovka)
         self.hodi = 0
         self.english = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-        self.k = 0
-        self.number = '0'
         self.setGeometry(1000, 1000, 1000, 1000)
         self.setWindowTitle('The war of sea')
         self.suma1 = 0
